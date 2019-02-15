@@ -4,7 +4,7 @@
 #
 #          FILE:  pgbackrest_restore.sh
 #
-#         USAGE:  ./pgbackrest_check.sh
+#         USAGE:  ./pgbackrest_restore.sh
 #
 #   DESCRIPTION: This script is intended to restore pgbackrest stanza to some local directory that predefined in this file. Be careful to set the directory parameters.
 #
