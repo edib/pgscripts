@@ -9,7 +9,8 @@ if [ $# -lt 2 ]
 #
 #         USAGE:  ./pgbackrest_check.sh YOUR_STANZA_NAME [time|wal|okcheck]
 #
-#   DESCRIPTION: This script is to check pgbackrest stanza information and is designed to be used in Zabbix agent UserParameter and can be used externally. Zabbix side docs is not included.
+#   DESCRIPTION: This script is to check pgbackrest stanza information and is designed to be used in Zabbix agent UserParameter and can be used externally. 
+                 Zabbix integration documentation is not included.
 #
 #       OPTIONS:  
 #  REQUIREMENTS: 1. This script must run on pgbackrest server. 
@@ -22,14 +23,15 @@ if [ $# -lt 2 ]
 #                5. okcheck: whether the backup is in failed state.
 #        AUTHOR:  ibrahim edib kökdemir, kokdemir@gmail.com
 #       COMPANY:  Tübitak YTE
-#       VERSION:  0.7
-#       CREATED:  02/28/2018 5:24 PM GMT+3
-#      REVISION:  02/13/2019 18:50 PM GMT+3
+#       VERSION:  0.9
+#       CREATED:  2018-02-28 17:24:00 +03
+#      REVISION:  2019-02-15 22:19:07 +03
 #===============================================================================
 HELP_USAGE
     return 1
 fi
 
+# map stanzas and db hosts. 
 declare -A HOSTMAP=( \
     [stanza1]=host1 \
     [stanza2]=host2 \
@@ -58,10 +60,11 @@ if [[ $returncode != 0 ]]; then
   last_archive_wal=${archiver_array[2]}
   case $2 in
         time)
+	  # delay wal archive as seconds
           # check now - last wal time
           echo $archive_time_diff;;
         wal)
-          # wall difference
+          # delay as # of archived wal files
           # check in pgbackrest
           last_backrest_wal=`pgbackrest --stanza $STANZA info | grep "wal archive min/max" | awk '{ print $NF }'`
           # check in flushed xlog
@@ -76,6 +79,7 @@ if [[ $returncode != 0 ]]; then
           archive_wal_diff=$((last_archive_wal-last_backrest_wal))
           echo $archive_wal_diff;;
         okcheck)
+	  # this part checks whether archive_command is failed.
           if [[ $last_archive_wal == $last_failed_wal ]]; then
             echo 0
           else
