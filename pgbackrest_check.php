@@ -5,7 +5,7 @@ if ($argc < 4):
   #
   #          FILE:  pgbackrest_check.php
   #
-  #         USAGE:  php ./pgbackrest_check.sh DATABASEHOST STANZA [time|wal|okcheck|label]
+  #         USAGE:  php ./pgbackrest_check.php DATABASEHOST STANZA [time|wal|okcheck|label]
   #
   #   DESCRIPTION: This script is to check pgbackrest stanza information and is designed to be used in Zabbix agent UserParameter and can be used externally.
   #                 Zabbix integration documentation is not included.
@@ -26,7 +26,7 @@ if ($argc < 4):
   #       COMPANY:  Tübitak YTE
   #       VERSION:  1.0
   #       CREATED:  2018-02-28 17:24:00 +03
-  #      REVISION:  2019-02-15 22:19:07 +03
+  #      REVISION:  2019-03-10 19:28:06 +03
   #===============================================================================
   ";
   exit;
