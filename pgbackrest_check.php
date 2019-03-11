@@ -26,7 +26,7 @@ if ($argc < 4):
   #       COMPANY:  Tübitak YTE
   #       VERSION:  1.0
   #       CREATED:  2018-02-28 17:24:00 +03
-  #      REVISION:  2019-03-10 19:28:06 +03
+  #      REVISION:  2019-03-11 14:46:27 +03
   #===============================================================================
   ";
   exit;
@@ -83,4 +83,3 @@ switch ($argv[3]) {
       // to check daily backup succeed. this value is only meaningful when compared with previous checked value.
       echo $last_backup->label;
       break;
-}
