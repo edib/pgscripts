@@ -1,6 +1,6 @@
 <?php
 
-if ($argc < 4):
+if (isset($argv[1]) && $argv[1] === "--help"):
   echo "
   #===============================================================================
   #
@@ -20,7 +20,7 @@ if ($argc < 4):
   #       COMPANY:  Tübitak YTE
   #       VERSION:  0.2
   #       CREATED:  2018-01-29 11:12:45 +03
-  #      REVISION:  2019-03-11 14:58:01 +03
+  #      REVISION:  2019-03-11 18:19:53 +03
   #===============================================================================
   ";
   exit;
@@ -37,7 +37,7 @@ define('PARAMS',array(
 /*
 to check the given datetime is valid
 */
-function validateDate($date, $format = 'd-m-Y H:i:s')
+function validateDate($date, $format = 'Y-m-d H:i:s')
 {
     $d = DateTime::createFromFormat($format, $date);
     return $d && $d->format($format) == $date;
@@ -48,10 +48,10 @@ to force to select a date.
 */
 function timeReadLine($all_backups, $selected) {
   do {
-  echo "Select a time to restore, or press enter the default time \n [".date("d-m-Y H:i:s", $all_backups[$selected]->timestamp->stop)."]";
+  echo "Select a time to restore, or press enter the default time \n [".date("Y-m-d H:i:s", $all_backups[$selected]->timestamp->stop)."]";
   $selected_time = readline();
   if ($selected_time === ""):
-    $selected_time = date("d-m-Y H:i:s", $all_backups[$selected]->timestamp->stop);
+    $selected_time = date("Y-m-d H:i:s", $all_backups[$selected]->timestamp->stop);
   endif;
 } while (!validateDate($selected_time));
   return $selected_time;
@@ -67,7 +67,7 @@ $all_backups = $pgb_info[0]->backup;
 # show backup list menu
 foreach ($all_backups as $key => $backup) {
   $key++;
-  print($key." ".$backup->label." [".strtoupper(substr($backup->type,0,1))."] (".date("d M Y H:i:s", $backup->timestamp->stop).")\n");
+  print($key." ".$backup->label." [".strtoupper(substr($backup->type,0,1))."] (".date("Y-m-d H:i:s", $backup->timestamp->stop).")\n");
 }
 
 $selected_backup = readline("Select a backup:");
@@ -92,7 +92,10 @@ if ($confirm === "y"):
   system("echo 'port=".PARAMS['PG_RESTORE_PORT']."' >> ".PARAMS['PG_RESTORE_DIR']."/postgresql.auto.conf");
   system("echo '#archive_command=' >> ".PARAMS['PG_RESTORE_DIR']."/postgresql.auto.conf");
   system("echo '#archive_mode=' >> ".PARAMS['PG_RESTORE_DIR']."/postgresql.auto.conf");
-  system(PARAMS['PG_CTL']." -D ".PARAMS['PG_RESTORE_DIR']." start");
+  exec(PARAMS['PG_CTL']." -D ".PARAMS['PG_RESTORE_DIR']." start  > /dev/null 2>&1 &");
+  echo "Server started!","\n";
+  sleep(2);
+  exit;
 else:
   exit;
 endif;
