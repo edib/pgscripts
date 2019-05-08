@@ -20,7 +20,7 @@ if (isset($argv[1]) && $argv[1] === "--help"):
   #       COMPANY:  Tübitak YTE
   #       VERSION:  0.2
   #       CREATED:  2018-01-29 11:12:45 +03
-  #      REVISION:  2019-03-11 18:19:53 +03
+  #      REVISION:  2019-03-11 18:20:12 +03
   #===============================================================================
   ";
   exit;
@@ -31,8 +31,10 @@ define('PARAMS',array(
   'PG_CTL' => "/usr/pgsql-11/bin/pg_ctl",
   'PG_RESTORE_DIR' => "/var/lib/pgsql/11/test",
   'PG_RESTORE_PORT' => "5555",
-  'STANZA_NAME' => "test"
+  'STANZA_NAME' => "test",
 ));
+// to sync with backup time
+ini_set( 'date.timezone', 'Europe/Istanbul' );
 
 /*
 to check the given datetime is valid

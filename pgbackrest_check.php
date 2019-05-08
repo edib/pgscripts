@@ -26,14 +26,16 @@ if ($argc < 4):
   #       COMPANY:  Tübitak YTE
   #       VERSION:  1.0
   #       CREATED:  2018-02-28 17:24:00 +03
-  #      REVISION:  2019-03-11 14:46:27 +03
+  #      REVISION:  2019-03-11 18:19:53 +03
   #===============================================================================
   ";
   exit;
 endif;
 
 // return all backups and convert to an object
-$pgb_info = json_decode(shell_exec('pgbackrest info --stanza '.argv[2].' --output json'));
+# for testing purposes
+//$pgb_info = json_decode(file_get_contents("pgbackrest.json"));
+$pgb_info = json_decode(shell_exec('pgbackrest info --stanza '.$argv[2].' --output json'));
 
 //last backup object
 $last_backup = end($pgb_info[0]->backup);
@@ -57,11 +59,11 @@ switch ($argv[3]) {
       // find the server version according to which wal query changes.
       $pg_version = $pg_version->fetch(PDO::FETCH_ASSOC);
       // if the version is 10 or more
-      if ( $pg_version['server_version_num'] > 10000 ):
+      if ( $pg_version['server_version_num'] > 100000 ):
         $last_flushed_wal = $myPDO->query("SELECT pg_walfile_name(pg_current_wal_flush_lsn()) pg_current_wal_flush_lsn");
       // if the version is less than 10
       else:
-        $last_flushed_wal = $myPDO->query("SELECT pg_xlogfile_name(pg_current_wal_flush_lsn()) pg_current_wal_flush_lsn");
+        $last_flushed_wal = $myPDO->query("SELECT pg_xlogfile_name(pg_current_xlog_flush_location()) pg_current_wal_flush_lsn");
       endif;
 
       $last_backrest_wal = hexdec(substr($pgb_info[0]->archive[0]->max,16,23));
@@ -83,3 +85,4 @@ switch ($argv[3]) {
       // to check daily backup succeed. this value is only meaningful when compared with previous checked value.
       echo $last_backup->label;
       break;
+    }
