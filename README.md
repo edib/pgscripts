@@ -1,2 +1,3 @@
 # pgscripts
-Some simple bash scripts that I use in postgresql administration.
+* pgbackrest_check.php: pgbackrest status check
+* pgbackrest_restore.php: pgbackrest local backup server restore
